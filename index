@@ -1,0 +1,95 @@
+import React, { useState } from 'react';
+import './style.css';
+
+export default function App() {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [gender, setGender] = useState('M');
+  const [entries, setEntries] = useState([]);
+  const [idCount, setIdCount] = useState(1);
+
+  const submitForm = () => {
+    if (firstName && lastName) {
+      const newEntry = {
+        id: idCount,
+        firstName,
+        lastName,
+        gender: gender === 'M' ? 'Male' : gender === 'F' ? 'Female' : 'Unsure',
+      };
+      setEntries([...entries, newEntry]);
+      setIdCount(idCount + 1);
+      clearForm();
+    }
+  };
+
+  const deleteEntry = (id) => {
+    const updatedEntries = entries.filter((entry) => entry.id !== id);
+    setEntries(updatedEntries);
+  };
+
+  const clearForm = () => {
+    setFirstName('');
+    setLastName('');
+    setGender('M');
+  };
+
+  return (
+    <div>
+      <div className="input-container">
+        <div className="input-cont">
+          <span>Firstname *</span>
+          <input
+            type="text"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+        </div>
+
+        <div className="input-cont">
+          <span>Lastname *</span>
+          <input
+            type="text"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+        </div>
+
+        <div className="input-cont gender">
+          <span>Gender *</span>
+          <select value={gender} onChange={(e) => setGender(e.target.value)}>
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+            <option value="U">Unsure</option>
+          </select>
+        </div>
+
+        <button onClick={submitForm}>Submit</button>
+      </div>
+
+      {/* <!-- Result table --> */}
+      <div className="result-cont">
+        <div className="header">Name Table</div>
+        <div className="table-header">
+          <span>#</span>
+          <span>First Name</span>
+          <span>Last Name</span>
+          <span>Gender</span>
+          <span>Action</span>
+        </div>
+
+        {/* <!-- Result entries --> */}
+        <div className="result">
+          {entries.map((entry, index) => (
+            <li key={entry.id}>
+              <span>{index + 1}</span>
+              <span>{entry.firstName}</span>
+              <span>{entry.lastName}</span>
+              <span>{entry.gender}</span>
+              <button onClick={() => deleteEntry(entry.id)}>Delete</button>
+            </li>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
